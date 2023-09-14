@@ -20,6 +20,8 @@ jobs:
       - name: Get Latest N64 dev release
         id: n64releaseinfo
         uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN: ${{github.token}}
         with:
           prerelease: true
           latest: true
