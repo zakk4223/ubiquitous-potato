@@ -35,7 +35,7 @@ jobs:
            RELEASE_SIZE=`/usr/bin/stat -c "%s" $RELEASE_FNAME`
            RELEASE_CSUM=`md5sum $RELEASE_FNAME | awk '{print $1}'`
            echo "RELEASE_FNAME=${RELEASE_FNAME}" >> $GITHUB_ENV
-           echo "File,URL,Size,Md5Sum,Tags,Attributes,Comment" > external_files.sv
+           echo "File,URL,Size,Md5Sum,Tags,Attributes,Comment" > external_files.csv
            echo "_Console/${RELEASE_FNAME},${N64_DOWNLOAD_URL},${RELEASE_SIZE},${RELEASE_CSUM},,," >> external_files.csv
            cat external_files.csv
            rm ${RELEASE_FNAME}
