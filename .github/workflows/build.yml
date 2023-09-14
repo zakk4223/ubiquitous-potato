@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DB_ID: n64_dev
-      DB_JSON_NAME: n64_dev_db
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Install deps
@@ -43,7 +42,7 @@ jobs:
         run: |
           if [ ! -f db.json ]; then exit 0; fi
           jq --argjson delval 'delete: ["_Console/N64_*"]' ".files.${RELEASE_FNAME} += $delval" db.json > db.json.fixed
-          mv db.json.fxed db.json
+          mv db.json.fixed db.json
           git config --global 'user.email' 'zakk@rsdio.com'
           git config --global 'user.name' "Techno Mechanicus"
           zip db.json.zip db.json
