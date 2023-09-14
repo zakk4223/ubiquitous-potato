@@ -33,7 +33,7 @@ jobs:
            RELEASE_FNAME=`basename ${N64_DOWNLOAD_URL}`
            curl -L $N64_DOWNLOAD_URL -o $RELEASE_FNAME
            RELEASE_SIZE=`/usr/bin/stat -c "%s" $RELEASE_FNAME`
-           RELEASE_CSUM=`md5sum $RELEASE_FNAME | awk '{print $1}`
+           RELEASE_CSUM=`md5sum $RELEASE_FNAME | awk '{print $1}'`
            echo "RELEASE_FNAME=${RELEASE_FNAME}" >> $GITHUB_ENV
            echo "_Console/${RELEASE_FNAME},${N64_DOWNLOAD_URL},${RELEASE_SIZE},${RELEASE_CSUM},,," > external_files.csv
            cat external_files.csv
