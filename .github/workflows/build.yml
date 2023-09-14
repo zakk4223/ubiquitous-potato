@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DB_ID: n64_dev
+      DB_JSON_NAME: n64_dev_db
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Install deps
@@ -34,16 +35,19 @@ jobs:
            curl -L $N64_DOWNLOAD_URL -o $RELEASE_FNAME
            RELEASE_SIZE=`/usr/bin/stat -c "%s" $RELEASE_FNAME`
            RELEASE_CSUM=`md5sum $RELEASE_FNAME`
-           echo "_Console/${RELEASE_FNAME},${N64_DOWNLOAD_URL},${RELEASE_SIZE},${RELEASE_CSUM},,delete:[\"_Console/N64_*\"]" > external_files.csv
+           echo "RELEASE_FNAME=${RELEASE_FNAME}" >> $GITHUB_ENV
+           echo "_Console/${RELEASE_FNAME},${N64_DOWNLOAD_URL},${RELEASE_SIZE},${RELEASE_CSUM},,," > external_files.csv
       - name: Create database
-        run: set -o pipefail && curl --fail --location https://raw.githubusercontent.com/theypsilon/Downloader_DB-Template_MiSTer/main/.github/build_db.py | python3 -
+        run: set -o pipefail && curl --fail --location https://raw.githubusercontent.com/theypsilon/Downloader_DB-Template_MiSTer/main/.github/build_db.py | python3 - -d
       - name: Push database
         run: |
-          if [ ! -f db.json ]; then exit 0; fi
-          mv db.json n64_dev_db.json
+          if [ ! -f n64_dev_db.json ]; then exit 0; fi
+          jq --argjson delval '["_Console/N64_*"]' ".files.${RELEASE_FNAME}.delete = $delval" n64_dev_db.json > db.json.fixed
+          mv db.json.fxed n64_dev_db.json
           git config --global 'user.email' 'zakk@rsdio.com'
           git config --global 'user.name' "Techno Mechanicus"
           zip n64_dev_db.json.zip n64_dev_db.json
+          rm db.json.zip
           git add n64_dev_db.json n64_dev_db.json.zip 
           git commit -m "Updating BIOS_DB"
           git push --force origin db
