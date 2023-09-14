@@ -38,6 +38,7 @@ jobs:
            echo "_Console/${RELEASE_FNAME},${N64_DOWNLOAD_URL},${RELEASE_SIZE},${RELEASE_CSUM},,," > external_files.csv
            cat external_files.csv
            rm ${RELEASE_FNAME}
+           ls -l
       - name: Create database
         run: set -o pipefail && curl --fail --location https://raw.githubusercontent.com/theypsilon/Downloader_DB-Template_MiSTer/main/.github/build_db.py | python3 - -d
       - name: Push database
