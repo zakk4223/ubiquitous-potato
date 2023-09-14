@@ -1,0 +1,48 @@
+name: Autobuild
+on: 
+  workflow_dispatch:
+  push:
+  schedule:
+    - cron: '*/30 * * * *'
+jobs:
+  n64-dev:
+    runs-on: ubuntu-latest
+    env:
+      DB_ID: n64_dev
+      GITHUB_TOKEN: ${{github.token}}
+    steps:
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install detox sharutils pip
+
+      - name: Get Latest N64 dev release
+        id: n64releaseinfo
+        uses: cardinalby/git-get-release-action@v1
+        env:
+          GITHUB_TOKEN ${{github.token}}
+        with:
+          prerelease: true
+          latest: true
+          repo: RobertPeip/Mister64
+      - name: Create external files csv 
+        run: |
+           N64_DOWNLOAD_URL="${{ fromJSON(steps.n64releaseinfo.outputs.assets)[0].browser_download_url }}"
+           RELEASE_FNAME=`basename ${N64_DOWNLOAD_URL}`
+           curl -L $N64_DOWNLOAD_URL -o $RELEASE_FNAME
+           RELEASE_SIZE=`/usr/bin/stat -c "%s" $RELEASE_FNAME`
+           RELEASE_CSUM=`md5sum $RELEASE_FNAME`
+           echo "_Console/${RELEASE_FNAME},${N64_DOWNLOAD_URL},${RELEASE_SIZE},${RELEASE_CSUM},,delete:[\"_Console/N64_*\"]" > external_files.csv
+      - name: Create database
+        run: set -o pipefail && curl --fail --location https://raw.githubusercontent.com/theypsilon/Downloader_DB-Template_MiSTer/main/.github/build_db.py | python3 -
+      - name: Push database
+        run: |
+          if [ ! -f db.json ]; then exit 0; fi
+          mv db.json n64_dev_db.json
+          zip n64_dev_db.json.zip n64_dev_db.json
+          git add n64_dev_db.json n64_dev_db.json.zip 
+          git commit -m "Updating BIOS_DB"
+          git push --force origin db
+
+
+
