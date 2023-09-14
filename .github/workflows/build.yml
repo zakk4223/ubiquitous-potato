@@ -16,6 +16,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install detox sharutils pip
 
+      - uses: actions/checkout@v2
+
       - name: Get Latest N64 dev release
         id: n64releaseinfo
         uses: cardinalby/git-get-release-action@v1
@@ -39,6 +41,8 @@ jobs:
         run: |
           if [ ! -f db.json ]; then exit 0; fi
           mv db.json n64_dev_db.json
+          git config --global 'user.email' 'zakk@rsdio.com'
+          git config --global 'user.name' "Techno Mechanicus"
           zip n64_dev_db.json.zip n64_dev_db.json
           git add n64_dev_db.json n64_dev_db.json.zip 
           git commit -m "Updating BIOS_DB"
