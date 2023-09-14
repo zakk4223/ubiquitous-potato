@@ -29,6 +29,12 @@ jobs:
           repo: RobertPeip/Mister64
       - name: Create external files csv 
         run: |
+           N64_DB_DOWNLOAD_URL="https://raw.githubusercontent.com/MiSTer-devel/N64_ROM_Database/main/N64-database.txt"
+           N64_DB_FNAME=`basename ${N64_DB_DOWNLOAD_URL}`
+           curl -L $N64_DB_DOWNLOAD_URL -o $N64_DB_FNAME
+           DB_SIZE=`/usr/bin/stat -c "%s" $N64_DB_FNAME`
+           DB_CSUM=`md5sum $N64_DB_FNAME | awk '{print $1}'`
+
            N64_DOWNLOAD_URL="${{ fromJSON(steps.n64releaseinfo.outputs.assets)[0].browser_download_url }}"
            RELEASE_FNAME=`basename ${N64_DOWNLOAD_URL}`
            curl -L $N64_DOWNLOAD_URL -o $RELEASE_FNAME
@@ -37,6 +43,7 @@ jobs:
            echo "RELEASE_FNAME=${RELEASE_FNAME}" >> $GITHUB_ENV
            echo "File,URL,Size,Md5Sum,Tags,Attributes,Comment" > external_files.csv
            echo "_Console/${RELEASE_FNAME},${N64_DOWNLOAD_URL},${RELEASE_SIZE},${RELEASE_CSUM},,," >> external_files.csv
+           echo "_Games/N64/${N64_DB_FNAME},${N64_DB_DOWNLOAD_URL},${DB_SIZE},${DB_CSUM},,overwrite:true," >> external_files.csv
            cat external_files.csv
            rm ${RELEASE_FNAME}
            ls -l
