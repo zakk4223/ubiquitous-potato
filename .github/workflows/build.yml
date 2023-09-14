@@ -43,7 +43,7 @@ jobs:
            echo "RELEASE_FNAME=${RELEASE_FNAME}" >> $GITHUB_ENV
            echo "File,URL,Size,Md5Sum,Tags,Attributes,Comment" > external_files.csv
            echo "_Console/${RELEASE_FNAME},${N64_DOWNLOAD_URL},${RELEASE_SIZE},${RELEASE_CSUM},,," >> external_files.csv
-           echo "_Games/N64/${N64_DB_FNAME},${N64_DB_DOWNLOAD_URL},${DB_SIZE},${DB_CSUM},,overwrite:true," >> external_files.csv
+           echo "games/N64/${N64_DB_FNAME},${N64_DB_DOWNLOAD_URL},${DB_SIZE},${DB_CSUM},,overwrite:true," >> external_files.csv
            cat external_files.csv
            rm ${RELEASE_FNAME}
            ls -l
