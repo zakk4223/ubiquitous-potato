@@ -46,8 +46,10 @@ jobs:
           git config --global 'user.email' 'zakk@rsdio.com'
           git config --global 'user.name' "Techno Mechanicus"
           zip db.json.zip db.json
+          git checkout --orphan db
+          git reset
           git add db.json db.json.zip 
-          git commit -m "Updating BIOS_DB"
+          git commit -m "Updating N64 Dev"
           git push --force origin db
 
 
