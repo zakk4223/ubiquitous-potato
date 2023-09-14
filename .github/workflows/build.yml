@@ -41,14 +41,13 @@ jobs:
         run: set -o pipefail && curl --fail --location https://raw.githubusercontent.com/theypsilon/Downloader_DB-Template_MiSTer/main/.github/build_db.py | python3 - -d
       - name: Push database
         run: |
-          if [ ! -f n64_dev_db.json ]; then exit 0; fi
-          jq --argjson delval '["_Console/N64_*"]' ".files.${RELEASE_FNAME}.delete = $delval" n64_dev_db.json > db.json.fixed
-          mv db.json.fxed n64_dev_db.json
+          if [ ! -f db.json ]; then exit 0; fi
+          jq --argjson delval 'delete: ["_Console/N64_*"]' ".files.${RELEASE_FNAME} += $delval" db.json > db.json.fixed
+          mv db.json.fxed db.json
           git config --global 'user.email' 'zakk@rsdio.com'
           git config --global 'user.name' "Techno Mechanicus"
-          zip n64_dev_db.json.zip n64_dev_db.json
-          rm db.json.zip
-          git add n64_dev_db.json n64_dev_db.json.zip 
+          zip db.json.zip db.json
+          git add db.json db.json.zip 
           git commit -m "Updating BIOS_DB"
           git push --force origin db
 
