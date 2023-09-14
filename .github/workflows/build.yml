@@ -4,11 +4,14 @@ on:
   push:
   schedule:
     - cron: '*/30 * * * *'
+
+permissions: write-all
 jobs:
   n64-dev:
     runs-on: ubuntu-latest
     env:
       DB_ID: n64_dev
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Install deps
         run: |
@@ -20,8 +23,6 @@ jobs:
       - name: Get Latest N64 dev release
         id: n64releaseinfo
         uses: cardinalby/git-get-release-action@v1
-        env:
-          GITHUB_TOKEN: ${{github.token}}
         with:
           prerelease: true
           latest: true
