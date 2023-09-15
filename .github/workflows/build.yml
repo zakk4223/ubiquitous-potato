@@ -51,10 +51,6 @@ jobs:
       - name: Push database
         run: |
           if [ ! -f db.json ]; then exit 0; fi
-          jq --argjson delval '["_Console/N64_*"]' ".files.\"_Console/${RELEASE_FNAME}\".delete = \$delval" db.json > db.json.fixed
-          mv db.json.fixed db.json
-          git config --global 'user.email' 'zakk@rsdio.com'
-          git config --global 'user.name' "Techno Mechanicus"
           zip db.json.zip db.json
           git checkout --orphan db
           git reset
