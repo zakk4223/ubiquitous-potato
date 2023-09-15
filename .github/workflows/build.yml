@@ -54,7 +54,6 @@ jobs:
           if [ ! -f db.json ]; then exit 0; fi
           zip db.json.zip db.json
           git checkout --orphan db
-          git reset
           git add db.json db.json.zip 
           git commit -m "Updating N64 Dev"
           git push --force origin db
