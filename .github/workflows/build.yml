@@ -26,7 +26,6 @@ jobs:
         id: n64releaseinfo
         uses: cardinalby/git-get-release-action@v1
         with:
-          prerelease: true
           latest: true
           repo: RobertPeip/Mister64
       - name: Create external files csv 
