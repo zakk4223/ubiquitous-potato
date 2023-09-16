@@ -1,9 +1,10 @@
 name: Autobuild
 on: 
   workflow_dispatch:
-  push:
+  release:
+    types: [published]
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '0 0,12 * * *'
 
 permissions: write-all
 jobs:
