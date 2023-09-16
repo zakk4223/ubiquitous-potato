@@ -51,6 +51,7 @@ jobs:
       - name: Create database
         run: |
           mkdir db_tmp
+          cp external_files.csv db_tmp
           cd db_tmp
           set -o pipefail && curl --fail --location https://raw.githubusercontent.com/theypsilon/Downloader_DB-Template_MiSTer/main/.github/build_db.py | python3 - -d
           cp db.json ..
