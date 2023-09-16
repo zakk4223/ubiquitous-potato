@@ -49,7 +49,11 @@ jobs:
            rm ${RELEASE_FNAME}
            rm ${N64_DB_FNAME}
       - name: Create database
-        run: set -o pipefail && curl --fail --location https://raw.githubusercontent.com/theypsilon/Downloader_DB-Template_MiSTer/main/.github/build_db.py | python3 - -d
+        run: |
+          mkdir db_tmp
+          cd db_tmp
+          set -o pipefail && curl --fail --location https://raw.githubusercontent.com/theypsilon/Downloader_DB-Template_MiSTer/main/.github/build_db.py | python3 - -d
+          cp db.json ..
       - name: Push database
         run: |
           if [ ! -f db.json ]; then exit 0; fi
